@@ -88,6 +88,3 @@ The dataset (`gold.csv`) includes:
 
 [Gold Price Prediction Repository](https://github.com/codebyimran-projects/gold-price-prediction)
 
-
-Do you want me to do that?
-```
