@@ -1,63 +1,30 @@
-import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt 
+import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.ensemble import RandomForestRegressor
+from sklearn import metrics
 
+# load csv file 
+gld_price_data = pd.read_csv('gld_price_data.csv')
+print(gld_price_data.head())
 
-# Load dataset
+# check dataset lenght 
+print(gld_price_data.shape)
+# check null values 
+print(gld_price_data.isnull().sum())
 
-dataset = pd.read_csv("gold.csv")
+correlation = gld_price_data.corr()
 
-# Drop any null values
-dataset = dataset.dropna()
-
-
-# Features and target
-
-# Features (all columns except Date and Close/Last)
-X = dataset.drop(columns=["Date", "Close/Last"], axis=1)
-
-# Target (gold price)
-y = dataset["Close/Last"]
-
-
-# Split data
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=3
+plt.figure(figsize=(8, 8))
+sns.heatmap(
+    correlation,
+    annot=True,
+    fmt='.1f',
+    cmap='Blues',
+    square=True,
+    cbar=True,
+    annot_kws={'size': 8}
 )
 
-
-# Train Linear Regression Model
-
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-
-# Predict on test set
-
-y_pred = model.predict(X_test)
-
-
-# Evaluate the model
-
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print("Model Evaluation Metrics:")
-print("MAE:", round(mae, 2))
-print("MSE:", round(mse, 2))
-print("R2 Score:", round(r2, 4))
-
-
-# Predict single example
-
-single_example = X.iloc[0]  # first row
-single_example_reshaped = single_example.values.reshape(1, -1)
-predicted_price = model.predict(single_example_reshaped)
-
-print("\nSingle Example Prediction:")
-print("Features:", single_example.to_dict())
-print("Predicted Price:", round(predicted_price[0], 2))
+plt.show()
